@@ -20,7 +20,7 @@ _main:
   mov $0x0, %rdi
   syscall
 
-  .section __TEXT,__data
+  .section __TEXT,__cstring
 format:
   .asciz "%s"
 msg:
