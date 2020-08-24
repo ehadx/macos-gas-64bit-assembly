@@ -5,7 +5,7 @@ _main:
   mov $0x4 + 0x2000000, %rax      // write
   mov $0x1, %rdi
   lea msg(%rip), %rsi
-  mov $0xd, %rdx
+  mov $0x13, %rdx
   syscall
 
   mov $0x1 + 0x2000000, %rax      // exit
@@ -14,4 +14,4 @@ _main:
 
   .section TEXT,__data
 msg:
-  .ascii "hello world!\n"
+  .asciz "hello world!\n"
