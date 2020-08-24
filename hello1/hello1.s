@@ -12,6 +12,6 @@ _main:
   mov $0x0, %rdi
   syscall
 
-  .section TEXT,__data
+  .section __TEXT,__data
 msg:
   .asciz "hello world!\n"

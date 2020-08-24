@@ -1,16 +1,16 @@
-// print hello world to stdout
+// print hello world using printf
   .section __TEXT,__text
+  .extern _printf
   .globl _main
 _main:
   // function prologue
   push %rbp
   mov %rsp, %rbp
 
-  mov $0x4 + 0x2000000, %rax      // write
-  mov $0x1, %rdi
-  lea msg(%rip), %rsi
-  mov $msg_len, %rdx
-  syscall
+  lea format(%rip), %rdi       // 1st arg
+  lea msg(%rip), %rsi          // 2nd arg
+  mov $0x0, %rax               // no xmm
+  call _printf
 
   // function epilogue
   mov %rbp, %rsp
@@ -21,12 +21,8 @@ _main:
   syscall
 
   .section __TEXT,__data
+format:
+  .asciz "%s"
 msg:
   .asciz "hello world!\n"
 msg_len = . - msg - 1
-
-// another way to get length
-// msg_start:
-//   .asciz "hello world!\n"
-// msg_end:
-//   .equ msg_len, msg_end - msg_start - 1
