@@ -1,4 +1,3 @@
-  .extern pi
   .global r_circum
   .global r_area
 

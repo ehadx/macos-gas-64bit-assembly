@@ -25,6 +25,7 @@ _main:
 push %rbp
 mov %rsp, %rbp
 // circle area
+  movsd radius(%rip), %xmm0
   call c_area
   // print
     lea fmtf(%rip), %rdi
@@ -44,7 +45,7 @@ mov %rsp, %rbp
   mov side2(%rip), %rsi
   call r_area
   // print
-    lea fmtf(%rip), %rdi
+    lea fmti(%rip), %rdi
     lea ra(%rip), %rsi
     mov %rax, %rdx
     mov $0, %rax
@@ -54,7 +55,7 @@ mov %rsp, %rbp
   mov side2(%rip), %rsi
   call r_circum
   // print
-    lea fmtf(%rip), %rdi
+    lea fmti(%rip), %rdi
     lea rc(%rip), %rsi
     mov %rax, %rdx
     mov $0, %rax
