@@ -1,6 +1,6 @@
 all: a.out circle.o rect.o sreverse.o asum.o adouble.o
 a.out: fromc.c circle.o rect.o sreverse.o asum.o adouble.o
-	gcc fromc.c circle.o rect.o sreverse.o asum.o adouble.o
+	clang fromc.c circle.o rect.o sreverse.o asum.o adouble.o
 circle.o: circle.s
 	as circle.s -o circle.o
 rect.o: rect.s
