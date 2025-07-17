@@ -1,6 +1,7 @@
 EXAMPLES = cmdline console1 console2 float func1 func2 hello1 hello2 hello3 \
    integer jump1 jump2 loop macro stack fromc inline1 inline2 func3
 LINKER_FLAGS = -lSystem -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/lib
+BUILD_DIR = out
 
 .SUFFIXES:
 
@@ -8,39 +9,57 @@ LINKER_FLAGS = -lSystem -L/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/us
 
 all: $(EXAMPLES)
 
-fromc: fromc/fromc.c fromc_circle.o fromc_rect.o fromc_sreverse.o fromc_asum.o fromc_adouble.o
-	mkdir -p out
-	clang fromc/fromc.c fromc_circle.o fromc_rect.o fromc_sreverse.o fromc_asum.o fromc_adouble.o -o out/$@
+FROMC_OBJS = circle.o rect.o sreverse.o asum.o adouble.o
+FROMC_OBJS_NAMES = $(addprefix fromc_, $(FROMC_OBJS))
+FROMC_OBJS_PATHS = $(addprefix $(BUILD_DIR)/, $(FROMC_OBJS_NAMES))
+
+fromc: fromc/fromc.c $(FROMC_OBJS_NAMES)
+	@mkdir -p $(BUILD_DIR)
+	clang $< $(FROMC_OBJS_PATHS) -o $(BUILD_DIR)/$@
 fromc_circle.o: fromc/circle.s
-	as $< -o $@
+	@mkdir -p $(BUILD_DIR)
+	as $< -o $(BUILD_DIR)/$@
 fromc_rect.o: fromc/rect.s
-	as $< -o $@
+	@mkdir -p $(BUILD_DIR)
+	as $< -o $(BUILD_DIR)/$@
 fromc_sreverse.o: fromc/sreverse.s
-	as $< -o $@
+	@mkdir -p $(BUILD_DIR)
+	as $< -o $(BUILD_DIR)/$@
 fromc_asum.o: fromc/asum.s
-	as $< -o $@
+	@mkdir -p $(BUILD_DIR)
+	as $< -o $(BUILD_DIR)/$@
 fromc_adouble.o: fromc/adouble.s
-	as $< -o $@
+	@mkdir -p $(BUILD_DIR)
+	as $< -o $(BUILD_DIR)/$@
 
-inline1:
-	clang inline1.c -o out/$@
-inline2:
-	clang inline2.c -o out/$@
+FUNC3_OBJS = circle.o rect.o
+FUNC3_OBJS_NAMES = $(addprefix func3_, $(FUNC3_OBJS))
+FUNC3_OBJS_PATHS = $(addprefix $(BUILD_DIR)/, $(FUNC3_OBJS_NAMES))
 
-func3: func3.o func3_rect.o func3_circle.o
-	ld func3.o func3_rect.o func3_circle.o -o out/$@ $(LINKER_FLAGS)
+func3: $(BUILD_DIR)/func3.o $(FUNC3_OBJS_NAMES)
+	@mkdir -p $(BUILD_DIR)
+	ld $< $(FUNC3_OBJS_PATHS) -o $(BUILD_DIR)/$@ $(LINKER_FLAGS)
 func3.o: func3/func3.s
-	as $< -o $@
+	@mkdir -p $(BUILD_DIR)
+	as $< -o $(BUILD_DIR)/$@
 func3_rect.o: func3/rect.s
-	as $< -o $@
+	@mkdir -p $(BUILD_DIR)
+	as $< -o $(BUILD_DIR)/$@
 func3_circle.o: func3/circle.s
-	as $< -o $@
+	@mkdir -p $(BUILD_DIR)
+	as $< -o $(BUILD_DIR)/$@
 
 %.o: %.s
-	as -o $@ $<
+	@mkdir -p $(BUILD_DIR)
+	as -o $(BUILD_DIR)/$@ $<
+
 %: %.o
-	mkdir -p out
-	ld -o out/$@ $(LINKER_FLAGS) $<
+	@mkdir -p $(BUILD_DIR)
+	ld -o $(BUILD_DIR)/$@ $(LINKER_FLAGS) $(BUILD_DIR)/$<
+
+%: %.c
+	@mkdir -p $(BUILD_DIR)
+	clang $< -o $(BUILD_DIR)/$@
 
 clean:
-	rm -rf out *.o
+	rm -rf $(BUILD_DIR) *.o
